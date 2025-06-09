@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>日期差计算器</title>
+    <script src="./js/tailwindcss-3.4.16.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3b82f6",
+              secondary: "#64748b",
+              accent: "#0ea5e9",
+              neutral: "#f8fafc",
+              "neutral-dark": "#1e293b",
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .transition-custom {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .shadow-custom {
+          box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1),
+            0 8px 10px -6px rgba(59, 130, 246, 0.1);
+        }
+        .date-input:focus {
+          @apply ring-2 ring-primary/50;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen font-sans"
+  >
+    <div class="container mx-auto px-4 py-12 max-w-3xl">
+      <div
+        class="bg-white rounded-2xl shadow-custom p-8 transition-custom hover:shadow-lg"
+      >
+        <h1
+          class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-neutral-dark mb-6 flex items-center"
+        >
+          <i class="fa fa-calendar-check-o text-primary mr-3"></i>
+          日期差计算器
+        </h1>
+
+        <div class="mb-8">
+          <p class="text-secondary mb-4">
+            计算两个日期之间相差的天数，默认显示从2025年5月24日到今天的天数。
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label
+                for="startDate"
+                class="block text-sm font-medium text-neutral-dark"
+                >开始日期</label
+              >
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary"
+                >
+                  <i class="fa fa-calendar"></i>
+                </span>
+                <input
+                  type="date"
+                  id="startDate"
+                  class="date-input w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom"
+                  value="2025-05-24"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label
+                for="endDate"
+                class="block text-sm font-medium text-neutral-dark"
+                >结束日期</label
+              >
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary"
+                >
+                  <i class="fa fa-calendar"></i>
+                </span>
+                <input
+                  type="date"
+                  id="endDate"
+                  class="date-input w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <button
+              id="calculateBtn"
+              class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg transition-custom flex items-center justify-center w-full md:w-auto"
+            >
+              <i class="fa fa-calculator mr-2"></i>
+              计算天数差
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="result"
+          class="bg-neutral rounded-xl p-6 border border-gray-100"
+        >
+          <div class="flex items-start mb-4">
+            <div class="bg-primary/10 rounded-full p-3 mr-4">
+              <i class="fa fa-clock-o text-primary text-xl"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-neutral-dark">计算结果</h2>
+              <p id="resultText" class="text-neutral-dark/80 mt-1">
+                从 <span id="displayStartDate">2025年5月24日</span> 到
+                <span id="displayEndDate">2025年6月9日</span> 共有
+                <span id="daysDifference" class="text-primary font-bold text-xl"
+                  >16</span
+                >
+                天
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-sm"
+          >
+            <div class="bg-white p-3 rounded-lg border border-gray-100">
+              <div class="text-secondary mb-1">开始日期</div>
+              <div id="startDayOfWeek" class="font-medium">星期六</div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-gray-100">
+              <div class="text-secondary mb-1">结束日期</div>
+              <div id="endDayOfWeek" class="font-medium">星期一</div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-gray-100">
+              <div class="text-secondary mb-1">总时长</div>
+              <div id="totalDuration" class="font-medium">
+                约 0.04 年 / 0.53 个月
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center text-secondary text-sm">
+        <p>© 2025 日期差计算器 | 使用 北辰 开发</p>
+      </div>
+    </div>
+    <script src="./js/index.js"></script>
+  </body>
+</html>
